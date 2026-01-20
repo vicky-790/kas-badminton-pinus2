@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Kas Badminton Pinus 2</title>
+  <meta name="description" content="Website Transparansi Kas Badminton Pinus 2 (Online)" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">🏸</div>
+      <div>
+        <div class="brand-title">Kas Badminton Pinus 2</div>
+        <div class="brand-sub">Main Kompak, Kas Transparan, Badan Sehat.</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-page="home">Home</button>
+      <button class="nav-btn" data-page="laporan">Laporan</button>
+      <button class="nav-btn" data-page="anggota">Anggota</button>
+      <button class="nav-btn" data-page="admin">Admin</button>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- HOME -->
+    <section id="page-home" class="page show">
+      <div class="hero card">
+        <h1>Transparansi Dana Kas</h1>
+        <p>
+          Website kas komunitas <b>Badminton Pinus 2</b>.
+          Data tersimpan online agar semua anggota bisa akses.
+        </p>
+
+        <div class="grid-4">
+          <div class="stat">
+            <div class="label">Saldo Total</div>
+            <div class="value" id="saldoTotal">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Membership Bulan Ini</div>
+            <div class="value" id="totalMembership">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Main (Sabtu) Bulan Ini</div>
+            <div class="value" id="totalMain">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Pengeluaran Bulan Ini</div>
+            <div class="value" id="totalExpense">Rp 0</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" data-goto="laporan">📑 Lihat Laporan</button>
+          <button class="btn ghost" data-goto="admin">➕ Input Kas</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Info Iuran</h2>
+        <ul class="info">
+          <li><b>Membership Bulanan</b>: Rp 70.000 / member / bulan</li>
+          <li><b>Main Sabtu Pagi</b>: Rp 20.000 / hadir</li>
+          <li><b>Jadwal</b>: Setiap Sabtu pagi</li>
+        </ul>
+
+        <div class="divider"></div>
+
+        <div class="muted">
+          Data online di Firebase, tapi dibuat hemat limit: load per bulan + cache + refresh manual.
+        </div>
+      </div>
+    </section>
+
+    <!-- LAPORAN -->
+    <section id="page-laporan" class="page">
+      <div class="card">
+        <div class="row-between">
+          <h2>📑 Laporan Kas</h2>
+          <button class="btn small" id="btnRefresh">🔄 Refresh</button>
+        </div>
+
+        <div class="filter-bar">
+          <label>Bulan</label>
+          <select id="filterBulan"></select>
+
+          <label>Tahun</label>
+          <select id="filterTahun"></select>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-kind="all">Gabungan</button>
+          <button class="tab" data-kind="membership">Membership</button>
+          <button class="tab" data-kind="main">Main</button>
+          <button class="tab" data-kind="expense">Pengeluaran</button>
+        </div>
+
+        <div class="grid-3 mt">
+          <div class="stat">
+            <div class="label">Pemasukan</div>
+            <div class="value" id="lapPemasukan">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Pengeluaran</div>
+            <div class="value" id="lapPengeluaran">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Selisih</div>
+            <div class="value" id="lapSelisih">Rp 0</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h3>Riwayat Transaksi</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Jenis</th>
+                <th>Nama / Kategori</th>
+                <th>Nominal</th>
+                <th>Catatan</th>
+              </tr>
+            </thead>
+            <tbody id="txTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANGGOTA -->
+    <section id="page-anggota" class="page">
+      <div class="card">
+        <h2>👥 Data Anggota</h2>
+        <div class="muted">
+          Status Membership otomatis dihitung dari pembayaran membership bulan ini.
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Status</th>
+                <th>Membership Bulan Ini</th>
+              </tr>
+            </thead>
+            <tbody id="memberTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="page-admin" class="page">
+      <div class="card">
+        <h2>🔐 Admin Input Kas</h2>
+
+        <div class="admin-lock" id="adminLock">
+          <p class="muted">Masukkan kode admin untuk input transaksi.</p>
+          <input type="password" id="adminCode" placeholder="Kode admin..." />
+          <button class="btn" id="btnUnlock">Buka Admin</button>
+          <div class="muted tiny">Kode default: <b>pinus2</b> (ubah di app.js)</div>
+        </div>
+
+        <div id="adminPanel" class="hide">
+
+          <h3>➕ Input Pemasukan</h3>
+          <div class="form grid-2">
+            <div>
+              <label>Jenis</label>
+              <select id="payJenis">
+                <option value="membership">Membership (70rb)</option>
+                <option value="main">Main (20rb)</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Tanggal</label>
+              <input type="date" id="payTanggal" />
+            </div>
+
+            <div>
+              <label>Nama Member</label>
+              <select id="payMember"></select>
+            </div>
+
+            <div>
+              <label>Nominal (Rp)</label>
+              <input type="number" id="payNominal" />
+              <div class="muted tiny">Auto sesuai jenis, bisa diubah.</div>
+            </div>
+
+            <div>
+              <label>Metode</label>
+              <select id="payMetode">
+                <option value="cash">Cash</option>
+                <option value="transfer">Transfer</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Catatan</label>
+              <input type="text" id="payCatatan" placeholder="contoh: iuran Jan" />
+            </div>
+          </div>
+          <button class="btn" id="btnSubmitPay">Simpan Pemasukan</button>
+
+          <div class="divider"></div>
+
+          <h3>➖ Input Pengeluaran</h3>
+          <div class="form grid-2">
+            <div>
+              <label>Tanggal</label>
+              <input type="date" id="expTanggal" />
+            </div>
+            <div>
+              <label>Kategori</label>
+              <input type="text" id="expKategori" placeholder="contoh: sewa lapangan" />
+            </div>
+            <div>
+              <label>Nominal (Rp)</label>
+              <input type="number" id="expNominal" placeholder="contoh: 120000" />
+            </div>
+            <div>
+              <label>Catatan</label>
+              <input type="text" id="expCatatan" placeholder="contoh: sabtu pagi" />
+            </div>
+          </div>
+          <button class="btn danger" id="btnSubmitExp">Simpan Pengeluaran</button>
+
+          <div class="divider"></div>
+
+          <button class="btn ghost" id="btnReloadAll">🔄 Reload Data</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div>© Kas Badminton Pinus 2</div>
+    <div class="muted tiny">Online + hemat limit Firebase</div>
+  </footer>
+
+  <!-- =======================================================
+    FIREBASE SDK (PAKE CDN)
+    - Ini aman dipake di hosting static
+    - Jangan hapus
+  ======================================================== -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
