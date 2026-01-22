@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <!-- =====================================================
+    Kas Badminton Pinus 2 - Website Transparansi Dana Kas
+    FILE: index.html (FINAL + EXPORT PDF RESMI)
+    - STYLE/warna UI utama TIDAK DIUBAH (KUNCI)
+    - Export PDF otomatis jadi format tabel resmi
+  ====================================================== -->
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ✅ Judul tab -->
+  <title>Kas Badminton Pinus 2</title>
+
+  <!-- ✅ CSS utama web (KUNCI) -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- ✅ Icon tab -->
+  <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/badminton.png" />
+</head>
+
+<body>
+  <!-- =====================================================
+    1) HEADER BRAND
+  ====================================================== -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true">🏸</div>
+      <div class="brand-text">
+        <div class="brand-title">Kas Badminton Pinus 2</div>
+        <div class="brand-sub">Main Kompak, Kas Transparan, Badan Sehat.</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================================
+    2) NAVIGATION (SPA)
+  ====================================================== -->
+  <nav class="nav">
+    <button class="nav-btn active" data-page="home">Home</button>
+    <button class="nav-btn" data-page="laporan">Laporan</button>
+    <button class="nav-btn" data-page="anggota">Anggota</button>
+    <button class="nav-btn" data-page="admin">Admin</button>
+  </nav>
+
+  <!-- =====================================================
+    3) WRAPPER UTAMA APLIKASI
+  ====================================================== -->
+  <main class="wrap">
+
+    <!-- ===================== HOME ===================== -->
+    <section class="page show" id="page-home">
+
+      <div class="card hero">
+        <h1>Transparansi Dana Kas</h1>
+        <p class="muted">
+          Website kas komunitas <b>Badminton Pinus 2</b>. Data tersimpan online agar semua anggota bisa akses.
+        </p>
+
+        <div class="grid-2 mt">
+          <div class="stat">
+            <!-- =================================================
+              ✅ PERUBAHAN 1X SAJA (KUNCI)
+              - Sebelumnya: Saldo Total
+              - Sekarang: Saldo Saat Ini
+              - id & layout TIDAK diubah
+            ================================================== -->
+            <div class="stat-title">Saldo Saat Ini</div>
+
+            <!-- ✅ ini tetap id="saldoTotal" (kunci - jangan diubah) -->
+            <div class="stat-value" id="saldoTotal">Rp 0</div>
+
+            <!-- ✅ info kecil tetap dipakai -->
+            <div class="muted tiny" id="saldoUpdated" style="margin-top:6px;">Memuat saldo global...</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-title">Membership Bulan Ini</div>
+            <div class="stat-value" id="totalMembership">Rp 0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-title">Main (Minggu) Bulan Ini</div>
+            <div class="stat-value" id="totalMain">Rp 0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-title">Pengeluaran Bulan Ini</div>
+            <div class="stat-value" id="totalExpense">Rp 0</div>
+          </div>
+        </div>
+
+        <div class="actions mt">
+          <button class="btn primary" data-goto="laporan">📋 Lihat Laporan</button>
+          <button class="btn" data-goto="admin">➕ Input Kas</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Info Iuran</h2>
+        <ul class="list">
+          <li><b>Membership Bulanan:</b> Rp 70.000 / member / bulan</li>
+          <li><b>Main Minggu Pagi:</b> Rp 20.000 / hadir</li>
+          <li><b>Jadwal:</b> Setiap Minggu pagi</li>
+        </ul>
+
+        <hr class="line" />
+
+        <p class="muted tiny">
+          Data online di Firebase, dibuat hemat limit: load per bulan + cache + refresh manual.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== LAPORAN ===================== -->
+    <section class="page" id="page-laporan">
+
+      <div class="card">
+        <div class="row-between">
+          <div>
+            <h2 style="margin:0;">Laporan Transaksi</h2>
+            <p class="muted tiny" style="margin:4px 0 0;">
+              Filter per bulan/tahun untuk hemat limit.
+            </p>
+          </div>
+
+          <button class="btn ghost" id="btnRefresh">🔄 Refresh</button>
+        </div>
+
+        <div class="grid-2 mt">
+          <div class="form">
+            <label>Bulan</label>
+            <select id="filterBulan"></select>
+          </div>
+          <div class="form">
+            <label>Tahun</label>
+            <select id="filterTahun"></select>
+          </div>
+        </div>
+
+        <div class="tabs mt">
+          <button class="tab active" data-kind="all">Semua</button>
+          <button class="tab" data-kind="membership">Membership</button>
+          <button class="tab" data-kind="main">Main</button>
+          <button class="tab" data-kind="expense">Expense</button>
+        </div>
+
+        <div class="grid-3 mt">
+          <div class="stat mini">
+            <div class="stat-title">Total Pemasukan</div>
+            <div class="stat-value" id="lapPemasukan">Rp 0</div>
+          </div>
+          <div class="stat mini">
+            <div class="stat-title">Total Pengeluaran</div>
+            <div class="stat-value" id="lapPengeluaran">Rp 0</div>
+          </div>
+          <div class="stat mini">
+            <div class="stat-title">Saldo Saat Ini</div>
+            <div class="stat-value" id="lapSaldoSaatIni">Rp 0</div>
+          </div>
+        </div>
+
+        <!-- EXPORT -->
+        <div class="divider"></div>
+        <h3 style="margin:0 0 10px;">Export Laporan</h3>
+        <div class="actions">
+          <button class="btn ghost" id="btnExportCSV">⬇️ Export CSV (bulan ini)</button>
+          <button class="btn ghost" id="btnExportPDF">⬇️ Export PDF (format resmi)</button>
+        </div>
+        <p class="muted tiny mt">
+          *Export PDF akan otomatis berubah menjadi tabel resmi, lalu buka print browser → Save as PDF.
+        </p>
+      </div>
+
+      <!-- TABLE WEB NORMAL (kunci) -->
+      <div class="card">
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Jenis</th>
+                <th>Nama / Kategori</th>
+                <th>Nominal</th>
+                <th>Catatan</th>
+              </tr>
+            </thead>
+            <tbody id="txTable">
+              <tr>
+                <td colspan="5" class="muted">Belum ada transaksi.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ANGGOTA ===================== -->
+    <section class="page" id="page-anggota">
+
+      <div class="card">
+        <div class="row-between">
+          <div>
+            <h2 style="margin:0;">Daftar Anggota</h2>
+            <p class="muted tiny" style="margin:4px 0 0;">
+              Status “Lunas/Belum” dihitung dari membership bulan yang dipilih.
+            </p>
+          </div>
+          <button class="btn ghost" id="btnReloadMembers">🔁 Reload Anggota</button>
+        </div>
+
+        <div class="table-wrap mt">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Status</th>
+                <th>Membership</th>
+              </tr>
+            </thead>
+            <tbody id="memberTable">
+              <tr>
+                <td colspan="3" class="muted">Memuat data anggota...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin:0 0 8px;">Top 5 Telat Membership (REAL)</h3>
+        <div class="muted tiny" style="margin-bottom:10px;">
+          Patokan: yang belum bayar sampai tanggal jatuh tempo.
+        </div>
+
+        <div class="grid-2">
+          <div class="form">
+            <label>Jatuh Tempo</label>
+            <select id="dueDaySelect">
+              <option value="5">Tanggal 5</option>
+              <option value="10">Tanggal 10</option>
+            </select>
+          </div>
+          <div class="form">
+            <label>Hari ini</label>
+            <input id="todayView" disabled />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div id="topTelat" class="muted">-</div>
+      </div>
+    </section>
+
+    <!-- ===================== ADMIN ===================== -->
+    <section class="page" id="page-admin">
+
+      <div class="card" id="adminLock">
+        <h2>Admin Panel</h2>
+        <p class="muted">Masukkan kode admin untuk membuka fitur input kas.</p>
+
+        <div class="grid-2 mt">
+          <div class="form">
+            <label>Kode Admin</label>
+            <input id="adminCode" type="password" placeholder="kode rahasia" />
+          </div>
+
+          <div class="form">
+            <label>&nbsp;</label>
+            <button class="btn primary" id="btnUnlock">🔓 Buka Admin</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card hide" id="adminPanel">
+        <div class="row-between">
+          <h2 style="margin:0;">Input Kas</h2>
+          <button class="btn ghost" id="btnReloadAll">♻️ Reload data</button>
+        </div>
+
+        <h3 class="mt">Pemasukan</h3>
+        <div class="grid-2">
+          <div class="form">
+            <label>Jenis</label>
+            <select id="payJenis">
+              <option value="membership">Membership</option>
+              <option value="main">Main (Minggu)</option>
+            </select>
+          </div>
+
+          <div class="form">
+            <label>Tanggal</label>
+            <input id="payTanggal" type="date" />
+          </div>
+
+          <div class="form">
+            <label>Member</label>
+            <input id="payMemberName" placeholder="contoh: Deni / tamu / dll" />
+          </div>
+
+          <div class="form">
+            <label>Nominal</label>
+            <input id="payNominal" type="number" />
+          </div>
+
+          <div class="form">
+            <label>Metode</label>
+            <select id="payMetode">
+              <option value="cash">Cash</option>
+              <option value="transfer">Transfer</option>
+            </select>
+          </div>
+
+          <div class="form">
+            <label>Catatan</label>
+            <input id="payCatatan" placeholder="opsional" />
+          </div>
+        </div>
+
+        <div class="actions mt">
+          <button class="btn primary" id="btnSubmitPay">✅ Simpan Pemasukan</button>
+        </div>
+
+        <hr class="line" />
+
+        <h3>Pengeluaran</h3>
+        <div class="grid-2">
+          <div class="form">
+            <label>Tanggal</label>
+            <input id="expTanggal" type="date" />
+          </div>
+
+          <div class="form">
+            <label>Kategori</label>
+            <input id="expKategori" placeholder="contoh: Shuttlecock" />
+          </div>
+
+          <div class="form">
+            <label>Nominal</label>
+            <input id="expNominal" type="number" />
+          </div>
+
+          <div class="form">
+            <label>Catatan</label>
+            <input id="expCatatan" placeholder="opsional" />
+          </div>
+        </div>
+
+        <div class="actions mt">
+          <button class="btn danger" id="btnSubmitExp">🧾 Simpan Pengeluaran</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <h3 style="margin:0 0 10px;">Kelola Anggota (Firebase)</h3>
+        <p class="muted tiny">
+          Ini daftar anggota “membership bulanan”. Yang main Minggu bisa beda-beda.
+        </p>
+
+        <div class="grid-2 mt">
+          <div class="form">
+            <label>Nama Anggota Baru</label>
+            <input id="newMemberName" placeholder="contoh: Andi" />
+          </div>
+          <div class="form">
+            <label>Status</label>
+            <select id="newMemberStatus">
+              <option value="aktif">aktif</option>
+              <option value="nonaktif">nonaktif</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="btnAddMember">➕ Tambah Anggota</button>
+        </div>
+
+        <hr class="line" />
+
+        <div class="grid-2">
+          <div class="form">
+            <label>Pilih Anggota (Untuk Hapus)</label>
+            <select id="removeMemberSelect"></select>
+          </div>
+          <div class="form">
+            <label>&nbsp;</label>
+            <button class="btn danger" id="btnRemoveMember">🗑️ Hapus Anggota</button>
+          </div>
+        </div>
+
+        <p class="muted tiny mt">
+          *Data transaksi yang sudah masuk tidak dihapus. Ini hanya menghapus dari list anggota.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================
+    4) PRINT AREA (HIDDEN NORMAL)
+    - Ini hanya untuk Export PDF
+    - App.js akan isi tabelnya otomatis
+  ====================================================== -->
+  <section id="printArea" aria-hidden="true"></section>
+
+  <!-- =====================================================
+    5) SCRIPT UTAMA
+  ====================================================== -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
